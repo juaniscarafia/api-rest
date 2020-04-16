@@ -7,4 +7,5 @@ npm i @babel/core @babel/cli @babel/preset-env @babel/node nodemon -D
 
 
 {VIDEO}
+https://www.youtube.com/watch?v=hVulRRdXWYI
 Minuto 33.10
