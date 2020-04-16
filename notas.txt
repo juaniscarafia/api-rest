@@ -1,0 +1,10 @@
+[Instalacion]
+//Dependencias PRD
+npm i express sqlite3 sequelize consign
+//Dependencias DESA
+npm i @babel/core @babel/cli @babel/preset-env @babel/node nodemon -D
+
+
+
+{VIDEO}
+Minuto 33.10
