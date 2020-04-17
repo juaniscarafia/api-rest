@@ -18,6 +18,14 @@ module.exports = (sequelize, DataType) => {
             validate: {
                 notEmpty: true
             }
+        },
+        email: {
+            type: DataType.STRING,
+            unique: true,
+            allowNull: false,
+            validate: {
+                notEmpty: true
+            }
         }
     });
 
