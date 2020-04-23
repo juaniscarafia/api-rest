@@ -1,6 +1,6 @@
 [Instalacion]
 //Dependencias PRD
-npm i express sqlite3 sequelize consign
+npm i express sqlite3 sequelize consign bcryptjs jsonwebtoken
 //Dependencias DESA
 npm i @babel/core @babel/cli @babel/preset-env @babel/node nodemon -D
 
@@ -9,3 +9,17 @@ npm i @babel/core @babel/cli @babel/preset-env @babel/node nodemon -D
 {VIDEO}
 https://www.youtube.com/watch?v=hVulRRdXWYI
 Minuto 33.10
+
+token
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1ODc2NDUxMDQsImV4cCI6MTU4NzczMTUwNH0.Zc1ByYFS0qE-0xMzPcslz7I7Nc-kmX4JJBVec2kIUOU
+
+JWT:
+const token = req.headers['x-access-token'];
+if (!token){
+    return res.status(401).json({
+        auth: false,
+        message: 'No token provided'
+    })
+}
+
+const decoded = jwt.verify(token,'pepebolas')
