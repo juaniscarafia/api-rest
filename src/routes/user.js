@@ -4,19 +4,11 @@ const jwt = require('jsonwebtoken');
 module.exports = app => {
     const Users = app.db.models.Users;
     const saltRounds = 10;
+    const verifyToken = require('../libs/verifyToken');
+    const config = require('../libs/configJWT');
 
     app.route('/users/')
-        .get((req,res) => {
-            const token = req.headers['x-access-token'];
-            if (!token){
-                return res.status(401).json({
-                    auth: false,
-                    message: 'No token provided'
-                });
-            }
-
-            const decoded = jwt.verify(token,'pepebolas');
-
+        .get(verifyToken, (req, res) => {
             Users.findAll({
                 attributes: ['id','name','email']
             })
@@ -35,7 +27,7 @@ module.exports = app => {
             
             Users.create(usr)
                 .then(result => {
-                    const token = jwt.sign({id: usr.id},'pepebolas',{
+                    const token = jwt.sign({id: usr.id},config.secret,{
                         expiresIn: 60 * 60 * 24
                     });
                     res.json({
@@ -54,17 +46,7 @@ module.exports = app => {
         });
 
     app.route('/users/:id')
-        .get((req,res) => {
-            const token = req.headers['x-access-token'];
-            if (!token){
-                return res.status(401).json({
-                    auth: false,
-                    message: 'No token provided'
-                });
-            }
-
-            const decoded = jwt.verify(token,'pepebolas');
-
+        .get(verifyToken, (req,res) => {
             Users.findByPk(req.params.id, {
                 attributes: ['id','name','email']
             })
@@ -73,17 +55,7 @@ module.exports = app => {
                 res.status(412).json({msg: error.message});
             });
         })
-        .delete((req, res) => {
-            const token = req.headers['x-access-token'];
-            if (!token){
-                return res.status(401).json({
-                    auth: false,
-                    message: 'No token provided'
-                });
-            }
-
-            const decoded = jwt.verify(token,'pepebolas');
-
+        .delete(verifyToken, (req, res) => {
             Users.destroy({where: req.params})
             .then(result => res.sendStatus(204))
             .catch(error =>{

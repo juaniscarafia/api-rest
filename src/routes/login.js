@@ -1,6 +1,9 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 module.exports = app => {
+    const verifyToken = require('../libs/verifyToken');
+    const config = require('../libs/configJWT');
     const Users = app.db.models.Users;
 
     app.route('/login/')
@@ -9,7 +12,7 @@ module.exports = app => {
             const _password = req.body.password;
             
             Users.findOne({
-                attributes: ['email','password'],
+                attributes: ['id', 'email','password'],
                 where:{email: _email},
                 raw : true
             }).then(result => {
@@ -21,18 +24,30 @@ module.exports = app => {
                 
                 const match = bcrypt.compareSync(_password, user.password);
                 
-                if(match) {
-                    res.json({
-                        auth: true,
-                        message: "Usuario Logueado",
-                    });
-                }
-                else {
-                    res.json({
+                if(!match) {
+                    return res.status(401).json({
                         auth: false,
-                        message: "Usuario No Logueado",
+                        token: null
                     });
                 }
+
+                const token = jwt.sign({id: user.id}, config.secret, { expiresIn: 60 * 60 * 24 });
+
+                res.json({
+                    auth: false,
+                    token
+                });
+            });
+        });
+
+    app.route('/profile/')
+        .get(verifyToken, (req, res) => {
+            Users.findByPk(req.userId, {
+                attributes: ['id','name','email']
+            })
+            .then(result => res.json(result))
+            .catch(error =>{
+                res.status(412).json({msg: error.message});
             });
         });
 }
