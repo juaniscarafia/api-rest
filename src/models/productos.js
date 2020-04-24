@@ -30,7 +30,7 @@ module.exports = (sequelize, DataType) => {
                 isDecimal: true
             }
         },
-        Cantidad: {
+        Stock: {
             type: DataType.INTEGER,
             allowNull: false,
             validate: {
