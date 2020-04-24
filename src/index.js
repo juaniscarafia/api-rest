@@ -9,8 +9,6 @@ consign({
     .include('libs/config.js')
     .then('db.js')
     .then('libs/middlewares.js')
-    //.then('libs/authController.js')
-    //.then('libs/verifyToken.js')
     .then('routes')
     .then('libs/boot.js')
     .into(app)

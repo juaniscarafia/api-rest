@@ -31,10 +31,10 @@ module.exports = app => {
                     });
                 }
 
-                const token = jwt.sign({id: user.id}, config.secret, { expiresIn: 60 * 60 * 24 });
+                const token = jwt.sign({id: user.id}, config.secret, { expiresIn: 30 });
 
                 res.json({
-                    auth: false,
+                    auth: true,
                     token
                 });
             });

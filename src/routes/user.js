@@ -28,7 +28,7 @@ module.exports = app => {
             Users.create(usr)
                 .then(result => {
                     const token = jwt.sign({id: usr.id},config.secret,{
-                        expiresIn: 60 * 60 * 24
+                        expiresIn: 30
                     });
                     res.json({
                         auth: true,

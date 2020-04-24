@@ -10,10 +10,22 @@ async function verifyToken (req, res, next) {
         });
     }
 
-    const decoded = jwt.verify(token, config.secret);
-    
-    req.userId = decoded.id;
-    next();
+    jwt.verify(token, config.secret, function(err, decoded) {
+        if (err) {
+            return res.status(200).send({ err: err, decoded: decoded });
+        }
+        req.userId = decoded.id;
+        next();
+      });
+
+    // const decoded = jwt.verify(token, config.secret, (err, result) => { 
+    //     return res.status(200).send({ err: err, result: result, }); 
+    // });
+
+    // if (decoded){
+    //     req.userId = decoded.id;
+    //     next();
+    // }
 }
 
 module.exports = verifyToken;
