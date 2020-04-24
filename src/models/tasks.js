@@ -9,7 +9,7 @@ module.exports = (sequelize, DataType) => {
             type: DataType.STRING,
             allowNull: false,
             validate: {
-            notEmpty: true
+                notEmpty: true
             }
         },
         done: {
