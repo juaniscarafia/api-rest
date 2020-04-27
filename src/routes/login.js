@@ -8,12 +8,12 @@ module.exports = app => {
 
     app.route('/login/')
         .get((req, res, next) => {
-            const _email = req.body.email;
-            const _password = req.body.password;
+            const _email = req.body.Email;
+            const _password = req.body.Password;
             
             Users.findOne({
-                attributes: ['id', 'email','password'],
-                where:{email: _email},
+                attributes: ['Id', 'Email','Password'],
+                where:{Email: _email},
                 raw : true
             }).then(result => {
                 const user = result;
@@ -22,7 +22,7 @@ module.exports = app => {
                     return res.status(404).json('El email no existe');
                 }
                 
-                const match = bcrypt.compareSync(_password, user.password);
+                const match = bcrypt.compareSync(_password, user.Password);
                 
                 if(!match) {
                     return res.status(401).json({
@@ -31,7 +31,7 @@ module.exports = app => {
                     });
                 }
 
-                const token = jwt.sign({id: user.id}, config.secret, { expiresIn: 60 * 60 });
+                const token = jwt.sign({Id: user.Id}, config.secret, { expiresIn: 60 * 60 });
 
                 res.json({
                     auth: true,
@@ -42,8 +42,8 @@ module.exports = app => {
 
     app.route('/profile/')
         .get(verifyToken, (req, res) => {
-            Users.findByPk(req.userId, {
-                attributes: ['id','name','email']
+            Users.findByPk(req.user.Id, {
+                attributes: ['Id','Name','Email']
             })
             .then(result => res.json(result))
             .catch(error =>{

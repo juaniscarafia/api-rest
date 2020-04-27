@@ -10,7 +10,7 @@ module.exports = app => {
     app.route('/users/')
         .get(verifyToken, (req, res) => {
             Users.findAll({
-                attributes: ['id','name','email']
+                attributes: ['Id','Name','Email']
             })
                 .then(result => res.json(result))
                 .catch(error =>{
@@ -20,35 +20,34 @@ module.exports = app => {
         .post((req, res) => {
             const usr = req.body;
             const salt = bcrypt.genSaltSync(saltRounds);
-            const hash = bcrypt.hashSync(usr.password, salt);
+            const hash = bcrypt.hashSync(usr.Password, salt);
 
-            usr.password = hash;
-            req.body.password = hash;
+            usr.Password = hash;
+            req.body.Password = hash;
             
             Users.create(usr)
                 .then(result => {
-                    const token = jwt.sign({id: usr.id},config.secret,{
+                    const token = jwt.sign({d: usr.Id}, config.secret, {
                         expiresIn: 60 * 60
                     });
                     res.json({
                         auth: true,
-                        token,
-                        user: result
+                        token
                     });
                 })
                 .catch(error =>{
                     res.status(412).json({msg: error.message});
                 });
 
-            const token = jwt.sign({id: usr.id},'pepebolas',{
+            const token = jwt.sign({Id: usr.Id}, config.secret, {
                 expiresIn: 60 * 60 * 24
             });
         });
 
-    app.route('/users/:id')
+    app.route('/users/:Id')
         .get(verifyToken, (req,res) => {
-            Users.findByPk(req.params.id, {
-                attributes: ['id','name','email']
+            Users.findByPk(req.params.Id, {
+                attributes: ['Id','Name','Email']
             })
             .then(result => res.json(result))
             .catch(error =>{

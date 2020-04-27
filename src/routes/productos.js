@@ -6,7 +6,7 @@ module.exports = app => {
     app.route('/Productos/')
         .get(verifyToken, (req, res) => {
             Productos.findAll({
-                attributes: ['id', 'Nombre', 'Descripcion', 'Precio', 'Stock']
+                attributes: ['Id', 'Nombre', 'Descripcion', 'Precio', 'Stock']
             })
             .then(result => res.json(result))
             .catch(error => {
@@ -20,21 +20,21 @@ module.exports = app => {
                     res.json({
                         msg: 'Producto creado correctamente.',
                         Producto: {
-                            id: result.id
+                            Id: result.Id
                         }
                     });
                 })
                 .catch(error =>{
                     res.status(412).json({
-                        Error: 'Error al crear producto.',
+                        Error: 'Error al crear el producto.',
                         msg: error.message
                     });
                 });
         });
-    app.route('/Productos/:id')
+    app.route('/Productos/:Id')
         .get(verifyToken, (req, res) => {
-            Productos.findByPk(req.params.id, {
-                attributes: ['id', 'Nombre', 'Descripcion', 'Precio', 'Stock']
+            Productos.findByPk(req.params.Id, {
+                attributes: ['Id', 'Nombre', 'Descripcion', 'Precio', 'Stock']
             })
                 .then(result => res.json(result))
                 .catch(error => {
@@ -50,7 +50,7 @@ module.exports = app => {
                 })
                 .catch(error => {
                     res.status(412).json({
-                        Error: 'Error al borrar producto.',
+                        Error: 'Error al borrar el producto.',
                         msg: error.message
                     });
                 });
@@ -58,7 +58,6 @@ module.exports = app => {
         .put((req, res) => {
             Productos.update(req.body, {where: req.params})
                 .then(result => {
-                    console.log(result);
                     res.json({
                         msg: 'Producto modificado correctamente.'
                     });
